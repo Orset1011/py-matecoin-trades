@@ -9,8 +9,8 @@ class Trade(TypedDict):
     matecoin_price: str
 
 
-def calculate_profit() -> dict[str, str]:
-    with open("trades.json", "r") as f:
+def calculate_profit(trades_path: str) -> None:
+    with open(trades_path, "r") as f:
         trades = cast(list[Trade], json.load(f))
 
     cash_flow: Decimal = Decimal("0")
@@ -29,7 +29,5 @@ def calculate_profit() -> dict[str, str]:
         "matecoin_account": str(matecoin_account),
     }
 
-    with open("summary.json", "w") as f:
-        json.dump(result, f, indent=4)
-
-    return result
+    with open("profit.json", "w") as f:
+        json.dump(result, f, indent=2)
