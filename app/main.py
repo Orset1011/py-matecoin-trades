@@ -1,23 +1,30 @@
 import json
 from decimal import Decimal
+from typing import TypedDict, cast
 
 
-def calculate_profit():
+class Trade(TypedDict):
+    bought: str | None
+    sold: str | None
+    matecoin_price: str
+
+
+def calculate_profit() -> dict[str, str]:
     with open("trades.json", "r") as f:
-        trades = json.load(f)
+        trades = cast(list[Trade], json.load(f))
 
-    cash_flow = Decimal("0")
-    matecoin_account = Decimal("0")
+    cash_flow: Decimal = Decimal("0")
+    matecoin_account: Decimal = Decimal("0")
 
     for trade in trades:
-        price = Decimal(trade["matecoin_price"])
-        bought = Decimal(trade["bought"] or "0")
-        sold = Decimal(trade["sold"] or "0")
+        price: Decimal = Decimal(trade["matecoin_price"])
+        bought: Decimal = Decimal(trade["bought"] or "0")
+        sold: Decimal = Decimal(trade["sold"] or "0")
 
         cash_flow += sold * price - bought * price
         matecoin_account += bought - sold
 
-    result = {
+    result: dict[str, str] = {
         "earned_money": str(cash_flow),
         "matecoin_account": str(matecoin_account),
     }
